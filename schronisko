@@ -1,0 +1,131 @@
+CREATE DATABASE Schronisko;
+
+USE Schronisko;
+
+CREATE TABLE Pieski (
+    PiesID INT PRIMARY KEY,
+    Imie VARCHAR(50),
+    Rasa VARCHAR(50),
+    BlokID INT,
+    Wiek DECIMAL(10, 2),
+	Waga DECIMAL(10, 2)
+	);
+
+	CREATE TABLE Bloki (
+    BlokID INT PRIMARY KEY,
+    NazwaBloku VARCHAR(50)
+);
+
+INSERT INTO Bloki (BlokID, NazwaBloku)
+VALUES
+    (1, 'Szczeniaki'),
+    (2, 'Male'),
+    (3, 'Srednie'),
+    (4, 'Duze');
+
+INSERT INTO Pieski (PiesID, Imie, Rasa, BlokID, Wiek, Waga)
+VALUES
+    (1, 'Miss', 'Owczarek niemiecki', 4, 4, 40),
+    (2, 'Elo', 'Husky', 3, 7, 25),
+    (3, 'Bob', 'York', 2, 9, 5),
+    (4, 'Nana', 'Kundel', 1, 0, 1),
+    (5, 'Charlie', 'Kundel', 1, 0, 1);
+
+SELECT*FROM Pieski
+SELECT*FROM Bloki
+
+UPDATE Pieski
+SET Waga = 45.5
+WHERE Imie = 'Miss';
+
+SELECT*FROM Pieski
+
+DELETE FROM Pieski
+WHERE Imie = 'Elo';
+
+SELECT*FROM Pieski
+
+INSERT INTO Pieski (PiesID, Imie, Rasa, BlokID, Wiek, Waga)
+VALUES (6, 'Rex', 'Golden Retriever', 4, 3, 30.00);
+
+SELECT*FROM Pieski
+
+BEGIN TRANSACTION;
+
+UPDATE Pieski
+SET Wiek = 4, Waga = 35.0
+WHERE Imie = 'Nana';
+
+COMMIT;
+
+SELECT*FROM Pieski
+
+SELECT AVG(Wiek) AS SredniWiek FROM Pieski;
+
+CREATE TABLE Adopcje (
+    AdopcjaID INT PRIMARY KEY,
+    PiesID INT,
+    BlokID INT,
+    DataAdopcji DATE,
+    CONSTRAINT FK_Pies FOREIGN KEY (PiesID) REFERENCES Pieski(PiesID),
+    CONSTRAINT FK_Blok FOREIGN KEY (BlokID) REFERENCES Bloki(BlokID)
+);
+
+SELECT*FROM Adopcje
+
+INSERT INTO Adopcje (AdopcjaID, PiesID, BlokID, DataAdopcji)
+VALUES (1, 1, 4, '2023-09-28');
+
+SELECT*FROM Adopcje
+
+INSERT INTO Pieski (PiesID, Imie, Rasa, BlokID, Wiek, Waga)
+VALUES (7, 'Max', 'Labrador Retriever', 3, 2.5, 30.0),
+ (8, 'Buddy', 'Golden Retriever', 2, 3.0, 35.0),
+ (9, 'Luna', 'German Shepherd', 1, 1.5, 25.0);
+
+ SELECT*FROM Pieski
+
+ SELECT * FROM Pieski WHERE BlokID = '1';
+
+ UPDATE Pieski SET Wiek = 1 WHERE Wiek = 1;
+
+ SELECT Pieski.Imie, Pieski.Rasa, Bloki.NazwaBloku
+FROM Pieski
+JOIN Bloki ON Pieski.BlokID = Bloki.BlokID
+WHERE Pieski.Rasa = 'German Shepherd' AND Bloki.NazwaBloku = 'Srednie';
+
+SELECT * FROM Pieski
+
+-- Pokaz imie, rasa i nazwa bloku z tabeli pieski, takich zeby byl german shepherd i szczeniak
+ SELECT Pieski.Imie, Pieski.Rasa, Bloki.NazwaBloku
+FROM Pieski
+JOIN Bloki ON Pieski.BlokID = Bloki.BlokID
+WHERE Pieski.Rasa = 'German Shepherd' AND Bloki.NazwaBloku = 'Szczeniaki';
+
+-- Adoptuja szczeniaka Luna wiec dodaje do tabel Adopted
+INSERT INTO Adopcje (AdopcjaID, PiesID, BlokID, DataAdopcji)
+VALUES (2, 9, 4, '2023-08-27');
+
+SELECT*FROM Adopcje
+
+SELECT*FROM Pieski
+
+ALTER TABLE Pieski
+ADD Color VARCHAR(50);
+
+UPDATE Pieski
+SET Color = CASE
+    WHEN Imie = 'Miss' THEN 'Czarny'
+    WHEN Imie = 'Elo' THEN 'Biały'
+    WHEN Imie = 'Nana' THEN 'Brazowy'
+    ELSE 'Unknown' -- Handle other cases here
+END
+
+SELECT*FROM Pieski
+
+UPDATE Pieski
+SET Color = 'kolorowy'
+WHERE Color IS NULL OR Color = 'Unknown';
+
+SELECT*FROM Pieski
+
